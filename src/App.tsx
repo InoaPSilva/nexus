@@ -7,7 +7,7 @@ function App() {
     <Router>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-          {routes.map((route, i) => (
+          {routes.map((route: any, i: any) => (
             <Route key={i} path={route.path} element={route.element} />
           ))}
         </Routes>

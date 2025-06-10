@@ -6,7 +6,7 @@ import { WorkspaceArea } from './workspaceArea';
 export default class Home extends Component {
     render() {
         return (
-            <div className="flex h-screen w-screen overflow-hidden">
+            <div className="flex h-screen w-screen overflow-visible">
                 <Sidebar />
                 <WorkspaceArea />
             </div>

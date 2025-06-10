@@ -5,19 +5,63 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { ChevronDown, Edit, Grid3X3, Plus } from "lucide-react";
+import { ChevronDown, EditIcon, Grid3X3, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
 export function SideBarTitle({
-    profiles,
     currentProfile,
     setCurrentProfile,
 }: any) {
+    // API CALL <GET PROFILES>
+    const [profiles, setProfiles] = useState<any[]>([
+        {
+            id: "personal",
+            name: "Personal",
+            icon: "🏠",
+            color: "blue",
+            description: "Personal workspace",
+            windows: [],
+            widgets: [],
+            folders: [],
+            backgroundStyle: "from-blue-100 to-purple-100",
+            backgroundType: "gradient",
+            uploadedFiles: [],
+        },
+        {
+            id: "work",
+            name: "Work",
+            icon: "💼",
+            color: "green",
+            description: "Work projects and tasks",
+            windows: [],
+            widgets: [],
+            folders: [],
+            backgroundStyle: "from-green-100 to-blue-100",
+            backgroundType: "gradient",
+            uploadedFiles: [],
+        },
+        {
+            id: "learning",
+            name: "Learning",
+            icon: "📚",
+            color: "purple",
+            description: "Study and research",
+            windows: [],
+            widgets: [],
+            folders: [],
+            backgroundStyle: "from-purple-100 to-pink-100",
+            backgroundType: "gradient",
+            uploadedFiles: [],
+        },
+    ])
+
     const current = profiles.find((p: any) => p.id === currentProfile);
+
     const [editingProfile, setEditingProfile] = useState<any>(null);
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
     const [isNewProfileOpen, setIsNewProfileOpen] = useState(false);
+
 
     return (
         <div className="p-4 border-b">
@@ -29,7 +73,6 @@ export function SideBarTitle({
                     <h1 className="font-bold text-lg">Nexus</h1>
                 </div>
 
-                {/* Profile Selector */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="w-full justify-between">
@@ -40,33 +83,33 @@ export function SideBarTitle({
                             <ChevronDown className="w-4 h-4" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
+                    <DropdownMenuContent className="w-full bg-white p-4 ">
                         {Array.isArray(profiles) &&
                             profiles.map((p: any) => (
-                                <DropdownMenuItem key={p.id} onClick={() => setCurrentProfile(p.id)}>
-                                    <span className="mr-2">{p.icon}</span>
-                                    <div className="flex-1">
+                                <DropdownMenuItem className="flex items-center gap-1 p-2 w-full "
+                                    key={p.id} onClick={() => setCurrentProfile(p.id)}>
+                                    <span className="text-xl">{p.icon}</span>
+                                    <div className="flex flex-col">
                                         <p className="font-medium">{p.name}</p>
                                         <p className="text-xs text-muted-foreground">{p.description}</p>
                                     </div>
                                     {p.id === currentProfile && (
                                         <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-6 w-6 p-0"
+                                            variant="default"
+                                            size="md"
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 setEditingProfile(p);
                                                 setIsEditProfileOpen(true);
                                             }}
                                         >
-                                            <Edit className="w-3 h-3" />
+                                            <Pencil className="w-4 h-4 text-gray-600" />
                                         </Button>
                                     )}
                                 </DropdownMenuItem>
                             ))}
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => setIsNewProfileOpen(true)}>
+                        <DropdownMenuItem className="flex items-center" onClick={() => setIsNewProfileOpen(true)}>
                             <Plus className="w-4 h-4 mr-2" />
                             New Profile
                         </DropdownMenuItem>

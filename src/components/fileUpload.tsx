@@ -47,7 +47,6 @@ export function FileUpload({ }: any) {
                     }
                 }
 
-                // Create file preview widget for all files
                 const filePreviewWidget: any = {
                     id: Date.now().toString() + Math.random(),
                     type: "file-preview",

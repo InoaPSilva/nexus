@@ -5,9 +5,9 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { FileUpload } from "@/components/fileUpload"
 import { SideBarTitle } from "@/components/sideBarTitle"
 import { DesktopControls } from "@/components/desktopControls"
-import { CreateList } from "@/components/CreateList"
 import { CreateWidget } from "@/components/createWidget"
 import { ActiveWindow } from "@/components/activeWidow"
+import { CreateList } from "@/components/createList"
 
 // Utility functions for safe number handling
 const safeNumber = (value: any, fallback = 0): number => {
@@ -17,47 +17,6 @@ const safeNumber = (value: any, fallback = 0): number => {
 
 export default function Sidebar() {
     const [currentProfile, setCurrentProfile] = useState("personal")
-    const [profiles, setProfiles] = useState<any[]>([
-        {
-            id: "personal",
-            name: "Personal",
-            icon: "🏠",
-            color: "blue",
-            description: "Personal workspace",
-            windows: [],
-            widgets: [],
-            folders: [],
-            backgroundStyle: "from-blue-100 to-purple-100",
-            backgroundType: "gradient",
-            uploadedFiles: [],
-        },
-        {
-            id: "work",
-            name: "Work",
-            icon: "💼",
-            color: "green",
-            description: "Work projects and tasks",
-            windows: [],
-            widgets: [],
-            folders: [],
-            backgroundStyle: "from-green-100 to-blue-100",
-            backgroundType: "gradient",
-            uploadedFiles: [],
-        },
-        {
-            id: "learning",
-            name: "Learning",
-            icon: "📚",
-            color: "purple",
-            description: "Study and research",
-            windows: [],
-            widgets: [],
-            folders: [],
-            backgroundStyle: "from-purple-100 to-pink-100",
-            backgroundType: "gradient",
-            uploadedFiles: [],
-        },
-    ])
 
     const [notes, setNotes] = useState<any[]>([])
     const [tasks, setTasks] = useState<any[]>([])
@@ -149,7 +108,6 @@ export default function Sidebar() {
             },
         ]
 
-        setProfiles((prev) => prev.map((p) => (p.id === "personal" ? { ...p, widgets: initialWidgets } : p)))
     }, [])
 
     useEffect(() => {
@@ -200,38 +158,34 @@ export default function Sidebar() {
     }, [isDraggingDesktop, handleDesktopMouseMove, handleDesktopMouseUp])
 
     return (
-        <div className="h-screen w-64 bg-muted/30 border-r backdrop-blur-md flex flex-col">
-            <div className="w-64 border-r bg-muted/30 flex flex-col">
+        <div className="h-screen w-auto bg-muted/30 border-r backdrop-blur-md flex flex-col">
 
-                <SideBarTitle
-                    profiles={profiles}
-                    currentProfile={currentProfile}
-                    setCurrentProfile={setCurrentProfile}
-                />
+            <SideBarTitle
+                currentProfile={currentProfile}
+                setCurrentProfile={setCurrentProfile}
+            />
 
-                <nav className="flex-1 p-4">
-                    <div className="space-y-2">
-                        <DesktopControls />
+            <nav className="flex-1 p-4">
+                <div className="space-y-2">
+                    <DesktopControls />
 
-                        <Separator className="my-2" />
+                    <Separator className="my-2" />
 
-                        {/* File Upload */}
-                        <FileUpload />
+                    <FileUpload />
 
-                        <Separator className="my-2" />
+                    <Separator className="my-2" />
 
-                        <CreateList />
+                    <CreateList />
 
-                        <Separator className="my-2" />
+                    <Separator className="my-2" />
 
-                        <CreateWidget />
-                    </div>
+                    <CreateWidget />
+                </div>
 
-                    <Separator className="my-4" />
+                <Separator className="my-4" />
 
-                    <ActiveWindow />
-                </nav>
-            </div>
+                <ActiveWindow />
+            </nav>
         </div>
     )
 }

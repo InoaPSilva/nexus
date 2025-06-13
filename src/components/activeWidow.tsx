@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { useCallback, useMemo, useState } from "react";
 
 export function ActiveWindow() {
-    const [currentProfile, setCurrentProfile] = useState("personal")
+    const [currentProfile] = useState("personal")
 
     const [profiles, setProfiles] = useState<any[]>([
         {
@@ -116,7 +116,7 @@ export function ActiveWindow() {
                         variant="ghost"
                         size="sm"
                         className="h-4 w-4 p-0"
-                        onClick={(e) => {
+                        onClick={() => {
                             // e.stopPropagation()
                             // closeWindow(window.id)
                         }}

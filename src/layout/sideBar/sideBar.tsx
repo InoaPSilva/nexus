@@ -1,7 +1,6 @@
-import React from "react"
+import React, { useState, useEffect, useCallback } from "react"
 
 import { Separator } from "@/components/ui/separator"
-import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { FileUpload } from "@/components/fileUpload"
 import { SideBarTitle } from "@/components/sideBarTitle"
 import { DesktopControls } from "@/components/desktopControls"
@@ -15,9 +14,31 @@ const safeNumber = (value: any, fallback = 0): number => {
     return isNaN(num) || !isFinite(num) ? fallback : num
 }
 
-export default function Sidebar() {
-    const [currentProfile, setCurrentProfile] = useState("personal")
+interface SidebarProps {
+    profiles: Array<{
+        id: string
+        name: string
+        icon: string
+        color: string
+        description: string
+        windows: any[]
+        widgets: any[]
+        folders: any[]
+        backgroundStyle: string
+        backgroundType: string
+        uploadedFiles: any[]
+    }>
+    setProfiles: React.Dispatch<React.SetStateAction<any[]>>
+    currentProfile: string
+    setCurrentProfile: React.Dispatch<React.SetStateAction<string>>
+}
 
+export default function Sidebar({
+    profiles,
+    setProfiles,
+    currentProfile,
+    setCurrentProfile,
+}: SidebarProps) {
     const [notes, setNotes] = useState<any[]>([])
     const [tasks, setTasks] = useState<any[]>([])
     const [syncStatus, setSyncStatus] = useState<"synced" | "syncing" | "offline">("synced")
@@ -88,26 +109,6 @@ export default function Sidebar() {
 
         setNotes(sampleNotes)
         setTasks(sampleTasks)
-
-        const initialWidgets: any[] = [
-            {
-                id: "spotify-widget",
-                type: "spotify",
-                position: { x: 20, y: 100 },
-                size: { width: 300, height: 200 },
-                content: currentTrack,
-                zIndex: 100,
-            },
-            {
-                id: "stats-widget",
-                type: "statistics",
-                position: { x: 340, y: 100 },
-                size: { width: 280, height: 220 },
-                content: statistics,
-                zIndex: 101,
-            },
-        ]
-
     }, [])
 
     useEffect(() => {
@@ -139,7 +140,7 @@ export default function Sidebar() {
                 })
             }
         },
-        [isDraggingDesktop, desktopDragStart],
+        [isDraggingDesktop, desktopDragStart]
     )
 
     const handleDesktopMouseUp = useCallback(() => {
@@ -159,10 +160,10 @@ export default function Sidebar() {
 
     return (
         <div className="h-screen w-auto bg-muted/30 border-r backdrop-blur-md flex flex-col">
-
             <SideBarTitle
                 currentProfile={currentProfile}
                 setCurrentProfile={setCurrentProfile}
+                profiles={profiles}
             />
 
             <nav className="flex-1 p-4">
@@ -171,7 +172,10 @@ export default function Sidebar() {
 
                     <Separator className="my-2" />
 
-                    <FileUpload />
+                    <FileUpload
+                        setProfiles={setProfiles}
+                        currentProfile={currentProfile}
+                    />
 
                     <Separator className="my-2" />
 

@@ -47,8 +47,8 @@ const initialProfiles = [
 export default function Home() {
     const [profiles, setProfiles] = useState(initialProfiles)
     const [currentProfile, setCurrentProfile] = useState('personal')
-
     return (
+
         <div className="flex h-screen w-screen overflow-visible">
             <Sidebar
                 profiles={profiles}
@@ -65,4 +65,4 @@ export default function Home() {
             />
         </div>
     )
-}
+    }

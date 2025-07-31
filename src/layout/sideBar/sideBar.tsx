@@ -179,7 +179,7 @@ export default function Sidebar({
 
                     <Separator className="my-2" />
 
-                    <CreateList />
+                    <CreateList currentProfile={currentProfile} setProfiles={setProfiles} />
 
                     <Separator className="my-2" />
 

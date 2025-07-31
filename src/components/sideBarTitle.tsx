@@ -8,6 +8,7 @@ import {
 import { ChevronDown, EditIcon, Grid3X3, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { NewProfileDialog } from "./newProfile";
 
 export function SideBarTitle({
     currentProfile,
@@ -116,6 +117,14 @@ export function SideBarTitle({
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+            {isNewProfileOpen && (
+                <NewProfileDialog
+                    open={isNewProfileOpen}
+                    onOpenChange={setIsNewProfileOpen}
+                    currentProfile={currentProfile}
+                    setProfiles={setProfiles}
+                />
+            )}
         </div>
 
     );

@@ -2034,7 +2034,7 @@
 //                         key={file.id}
 //                         className="cursor-pointer hover:shadow-md transition-shadow"
 //                         onClick={() => openFilePreviewWindow(file)}
-//                       >
+//                       > 
 //                         <CardContent className="p-3">
 //                           <div className="aspect-square bg-muted rounded-lg mb-2 flex items-center justify-center overflow-hidden">
 //                             {file.type && file.type.startsWith("image/") ? (

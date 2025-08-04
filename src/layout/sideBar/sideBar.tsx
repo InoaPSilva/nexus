@@ -4,9 +4,10 @@ import { Separator } from "@/components/ui/separator"
 import { FileUpload } from "@/components/fileUpload"
 import { SideBarTitle } from "@/components/sideBarTitle"
 import { DesktopControls } from "@/components/desktopControls"
-import { CreateWidget } from "@/components/createWidget"
-import { ActiveWindow } from "@/components/activeWidow"
 import { CreateList } from "@/components/createList"
+import { Button } from "@/components/ui/button"
+import { open } from "@tauri-apps/plugin-dialog";
+import { isTauri } from "@tauri-apps/api/core";
 
 // Utility functions for safe number handling
 const safeNumber = (value: any, fallback = 0): number => {
@@ -27,6 +28,7 @@ interface SidebarProps {
         backgroundStyle: string
         backgroundType: string
         uploadedFiles: any[]
+        sources?: string[]
     }>
     setProfiles: React.Dispatch<React.SetStateAction<any[]>>
     currentProfile: string
@@ -46,7 +48,38 @@ export default function Sidebar({
     const [desktopOffset, setDesktopOffset] = useState({ x: 0, y: 0 })
     const [isDraggingDesktop, setIsDraggingDesktop] = useState(false)
     const [desktopDragStart, setDesktopDragStart] = useState({ x: 0, y: 0 })
+    const [folderPath, setFolderPath] = useState("");
+    const selectFolder = async () => {
+        if (!(await isTauri())) {
+            alert("A seleção de pastas está disponível apenas no aplicativo Tauri.");
+            return;
+        }
 
+        try {
+            const selected = await open({
+                directory: true,
+                multiple: false,
+            });
+
+            if (selected && typeof selected === "string") {
+                setFolderPath(selected);
+
+                setProfiles((prevProfiles) =>
+                    prevProfiles.map((profile) =>
+                        profile.id === currentProfile
+                            ? {
+                                ...profile,
+                                sources: [...(profile.sources || []), selected],
+                            }
+                            : profile
+                    )
+                );
+            }
+        } catch (error) {
+            console.error("Erro ao selecionar pasta:", error);
+            alert("Erro ao selecionar pasta.");
+        }
+    };
     const [currentTrack, setCurrentTrack] = useState<any>({
         id: "1",
         name: "Bohemian Rhapsody",
@@ -182,13 +215,35 @@ export default function Sidebar({
                     <CreateList currentProfile={currentProfile} setProfiles={setProfiles} />
 
                     <Separator className="my-2" />
+                    <section>
+                        <p className="text-xs font-medium text-muted-foreground mb-2">SELECT SOURCE</p>
+                        <div>
+                            <Button
+                                variant="default"
+                                onClick={selectFolder}
+                                className="px-4 py-2 bg-blue-600 rounded"
+                            >
+                                Select Folder
+                            </Button>
+                        </div>
+                    </section>
 
-                    <CreateWidget />
+                    {/* List current sources */}
+                    <section className="w-40">
+                        <p className="text-xs font-medium text-muted-foreground mb-2 justify-text-center">CURRENT SOURCES</p>
+                        <ul className="list-disc pl-5 text-sm text-muted-foreground max-w-full max-h-48 overflow-auto whitespace-nowrap">
+                            {profiles
+                                .find((profile) => profile.id === currentProfile)
+                                ?.sources?.map((source, index) => (
+                                    <li key={index}>{source}</li>
+                                )) || <li>No sources added</li>}
+                        </ul>
+                    </section>
                 </div>
 
-                <Separator className="my-4" />
+                {/* <Separator className="my-4" /> */}
 
-                <ActiveWindow />
+                {/* <ActiveWindow /> */}
             </nav>
         </div>
     )

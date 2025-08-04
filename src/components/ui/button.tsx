@@ -16,7 +16,7 @@ export const Button = React.forwardRef<
     "inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2";
 
   const variantStyles: Record<string, string> = {
-    default: "bg-primary text-white hover:bg-primary/90",
+    default: "bg-primary text-primary hover:bg-primary/90",
     outline: "border border-primary text-primary hover:bg-primary/10",
     ghost: "bg-transparent hover:bg-muted",
   };

@@ -213,6 +213,15 @@ const WidgetContent = ({
                 </div>
             )
 
+        case "source":
+            return (
+                <div className="p-3 text-center">
+                    <IconWithLabel icon={<Globe className="w-4 h-4 text-blue-500" />} label={content.location ?? "Unknown"} />
+                    <div className="text-2xl mb-1">☀️</div>
+                    <div className="text-lg font-medium">{content.temperature ?? "--"}°C</div>
+                    <div className="text-xs text-muted-foreground">{content.condition ?? "N/A"}</div>
+                </div>
+            )
         case "file":
             return (
                 <div className="p-3">
@@ -231,36 +240,6 @@ const WidgetContent = ({
                                 <Button variant="ghost" size="sm" className="h-6 text-xs mt-1" onClick={() => openFilePreviewWindow(content)}>Open</Button>
                             )}
                         </div>
-                    </div>
-                </div>
-            )
-        case "browser":
-            return (
-                <div className="p-2 h-full flex flex-col">
-                    <div className="flex items-center gap-2 mb-2">
-                        <Globe className="w-4 h-4 text-blue-500" />
-                        <span className="text-xs font-medium truncate">Browser</span>
-                    </div>
-                    <input
-                        type="text"
-                        defaultValue={content?.url ?? "https://example.com"}
-                        placeholder="Enter URL"
-                        className="text-xs px-2 py-1 border rounded w-full mb-2"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                const newUrl = (e.target as HTMLInputElement).value
-                                if (newUrl && widget.onUpdateContent) {
-                                    widget.onUpdateContent({ url: newUrl })
-                                }
-                            }
-                        }}
-                    />
-                    <div className="flex-1 border rounded overflow-hidden">
-                        <iframe
-                            src={content?.url ?? "https://example.com"}
-                            title="Webpage"
-                            className="w-full h-full border-none"
-                        />
                     </div>
                 </div>
             )

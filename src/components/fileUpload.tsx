@@ -55,7 +55,7 @@ export function FileUpload({
                 const url = e.dataTransfer.getData("text/uri-list") || e.dataTransfer.getData("text/plain")
 
                 if (url && /^https?:\/\//.test(url)) {
-                    const browserWidget = {
+                    const browserWindow = {
                         id: Date.now().toString() + Math.random(),
                         type: "browser",
                         position: { x: 150, y: 150 },
@@ -71,7 +71,7 @@ export function FileUpload({
                     setProfiles((all) =>
                         all.map((p) =>
                             p.id === currentProfile
-                                ? { ...p, widgets: [...p.widgets, browserWidget] }
+                                ? { ...p, windows: [...p.windows, browserWindow] }
                                 : p
                         )
                     )

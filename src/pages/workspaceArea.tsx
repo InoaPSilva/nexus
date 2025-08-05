@@ -103,16 +103,22 @@ export function WorkspaceArea({
       const target = e.target as HTMLElement;
       const itemId = target.closest("[data-item-id]")?.getAttribute("data-item-id");
       const itemType = target.closest("[data-item-type]")?.getAttribute("data-item-type");
+      console.log(itemId);
+
 
       if (itemId && itemType) {
         if (itemType === "folder") {
           foundItem = folders.find((f: any) => f.id === itemId) || null;
+          foundItem.type = itemType
+
         } else if (itemType === "widget") {
           foundItem = widgets.find((w: any) => w.id === itemId) || null;
         } else if (itemType === "window") {
           foundItem = windows.find((w: any) => w.id === itemId) || null;
         }
       }
+
+
 
       setClickedItem(foundItem);
       setContextMenu({ x: e.pageX, y: e.pageY });
@@ -304,22 +310,6 @@ export function WorkspaceArea({
               : p,
           ),
         )
-      } else if (itemType === "file") {
-        setProfiles((prev) =>
-          prev.map((p) =>
-            p.id === currentProfile
-              ? {
-                ...p,
-                uploadedFiles: p.uploadedFiles.filter((f: any) => f.id !== item.id),
-                folders: p.folders.map((folder: any) =>
-                  folder.id === folderId
-                    ? { ...folder, items: [...folder.items, { ...item, parentFolderId: folderId }] }
-                    : folder,
-                ),
-              }
-              : p,
-          ),
-        )
       }
     },
     [currentProfile],
@@ -443,6 +433,7 @@ export function WorkspaceArea({
           <CustomContextMenu
             x={contextMenu.x}
             y={contextMenu.y}
+            deleteFolder={deleteFolder}
             createWidget={addWidget}
             createWindow={openWindow}
             onClose={() => setContextMenu(null)}
@@ -458,16 +449,6 @@ export function WorkspaceArea({
         currentProfile={currentProfile}
         setProfiles={setProfiles}
       />
-
-
-      <div className="absolute bottom-4 right-4 z-30">
-        <Button
-          className="rounded-full w-12 h-12 shadow-lg text-white bg-blue-600 hover:bg-blue-700"
-          onClick={() => addWidget("clock", { timezone: "UTC" })}
-        >
-          +
-        </Button>
-      </div>
 
       <div className="absolute inset-0 z-0">
         {profile?.backgroundType === "gradient" && (
@@ -567,6 +548,8 @@ export function WorkspaceArea({
                 onUpdateWidget={updateWidget}
                 onDeleteWidget={deleteWidget}
                 onTransferWidget={transferWidget}
+                onDropInWidget={dropInWindow}
+
               >
                 <WidgetContent widget={w} />
               </DraggableWidget>

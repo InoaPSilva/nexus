@@ -10,6 +10,7 @@ interface CustomContextMenuProps {
     onCreateFolder: () => void;
     createWidget?: (type: string, content: any) => void;
     createWindow?: (type: any["type"], title: string, content?: any) => void;
+    deleteFolder?: (id: any) => void;
     clickedSomething?: any
 }
 
@@ -20,9 +21,10 @@ const CustomContextMenu: React.FC<CustomContextMenuProps> = ({
     onCreateFolder,
     createWidget,
     createWindow,
-    clickedSomething
+    clickedSomething,
+    deleteFolder
+
 }) => {
-    console.log(clickedSomething);
 
     const [isGetDataFromSource, setIsGetDataFromSource] = useState(false);
     const [isGetDataFromWidget, setIsGetDataFromWidget] = useState(false);
@@ -32,7 +34,7 @@ const CustomContextMenu: React.FC<CustomContextMenuProps> = ({
     const widgetList = ["clock", "calculator", "bookmark",
         // "file"
     ];
-    const windowList = ["gallery", "notes", "task"]
+    const windowList = ["gallery", "notes", "task", "empty"]
 
     const selectFolder = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -205,7 +207,7 @@ const CustomContextMenu: React.FC<CustomContextMenuProps> = ({
 
 
             {/* Contextual menu */}
-            {clickedSomething && (
+            {clickedSomething?.type === "folder" && (
                 <div
                     className="absolute z-50 w-64 bg-white p-2 rounded shadow-lg"
                     style={{ top: y, left: x }}
@@ -233,6 +235,71 @@ const CustomContextMenu: React.FC<CustomContextMenuProps> = ({
                     </div>
                 </div>
             )}
+            {clickedSomething?.type === "widget" && (
+                <div
+                    className="absolute z-50 w-64 bg-white p-2 rounded shadow-lg"
+                    style={{ top: y, left: x }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onClose();
+                    }}
+                >
+                    <span className="text-xs text-muted-foreground block px-2 py-1">
+                        Editar {clickedSomething.name}
+                    </span>
+
+                    {/* Create folder */}
+                    <div
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            // clickedSomething?.delete;
+                            console.log(clickedSomething);
+                            
+                            if (clickedSomething.itemId) {
+                                deleteFolder?.(clickedSomething.itemId);
+                            }
+                            onClose();
+                        }}
+                        className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded flex items-center justify-between gap-2"
+                    >
+                        <Trash className="w-4 h-4" />
+                        <span className="text-sm">Remover</span>
+                        <Minus className="w-3 h-3" />
+                    </div>
+                </div >
+            )
+            }
+            {
+                clickedSomething?.type === "folder" && (
+                    <div
+                        className="absolute z-50 w-64 bg-white p-2 rounded shadow-lg"
+                        style={{ top: y, left: x }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}
+                    >
+                        <span className="text-xs text-muted-foreground block px-2 py-1">
+                            Editar {clickedSomething.name}
+                        </span>
+
+                        {/* Create folder */}
+                        <div
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                clickedSomething?.delete;
+                                onClose();
+                            }}
+                            className="cursor-pointer hover:bg-gray-100 px-2 py-1 rounded flex items-center justify-between gap-2"
+                        >
+                            <Trash className="w-4 h-4" />
+                            <span className="text-sm">Remover</span>
+                            <Minus className="w-3 h-3" />
+                        </div>
+                    </div>
+                )
+            }
+
 
         </>,
         document.body

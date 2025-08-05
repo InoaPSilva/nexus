@@ -24,10 +24,11 @@ interface Props {
     onUpdateWidget: (id: string, updates: Partial<Widget>) => void
     onDeleteWidget: (id: string) => void
     onTransferWidget?: (w: Widget) => void
+    onDropInWidget?: (widgetId: string, item: any, itemType: string) => void
     children: ReactNode
 }
 
-const DraggableWidget: FC<Props> = ({ widget, onUpdateWidget, onDeleteWidget, onTransferWidget, children }) => {
+const DraggableWidget: FC<Props> = ({ widget, onUpdateWidget, onDeleteWidget, onTransferWidget, children, onDropInWidget, ...props }) => {
     const ref = useRef<HTMLDivElement>(null)
     const [dragging, setDragging] = useState(false)
     const [resizing, setResizing] = useState(false)
@@ -65,6 +66,7 @@ const DraggableWidget: FC<Props> = ({ widget, onUpdateWidget, onDeleteWidget, on
 
     return (
         <div
+            {...props}
             ref={ref}
             className={`absolute bg-background border rounded-lg shadow-lg select-none ${dragging || resizing ? "cursor-grabbing" : "cursor-move"}`}
             style={{ left: pos.x, top: pos.y, width: size.width, height: size.height, zIndex: safeNum(widget.zIndex, 1) }}
@@ -75,6 +77,28 @@ const DraggableWidget: FC<Props> = ({ widget, onUpdateWidget, onDeleteWidget, on
                 dragStart.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
                 update({ zIndex: Date.now() })
             }}
+            onDrop={
+                onDropInWidget
+                    ? (e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        try {
+                            const data = JSON.parse(e.dataTransfer.getData("application/json"))
+                            onDropInWidget(widget.id, data.item, data.type)
+                        } catch (error) {
+                            console.error("Error processing window drop:", error)
+                        }
+                    }
+                    : undefined
+            }
+            onDragOver={
+                onDropInWidget
+                    ? (e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                    }
+                    : undefined
+            }
         >
             <div className="flex justify-between items-center p-2 border-b bg-muted/30">
                 <div className="flex items-center gap-2">

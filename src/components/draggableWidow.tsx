@@ -49,7 +49,7 @@ export const DraggableWindowComponent: FunctionComponent<{
     onCloseWindow: (id: string) => void
     onDropInWindow?: (windowId: string, item: any, itemType: string) => void
     children: ReactNode
-}> = ({ window, onUpdateWindow, onCloseWindow, onDropInWindow, children }) => {
+}> = ({ window, onUpdateWindow, onCloseWindow, onDropInWindow, children, ...props }) => {
     const windowRef = useRef<HTMLDivElement>(null)
     const headerRef = useRef<HTMLDivElement>(null)
     const [isDragging, setIsDragging] = useState(false)
@@ -299,6 +299,7 @@ export const DraggableWindowComponent: FunctionComponent<{
         <>
             <SnapZones isVisible={showSnapZones && !window.isPinned} zones={snapZones} />
             <div
+                {...props}
                 ref={windowRef}
                 draggable
                 onDragStart={(e) => {

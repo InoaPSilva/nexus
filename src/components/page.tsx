@@ -479,6 +479,18 @@ const PageContent = ({
                     </div>
                 </div>
             )
+        case "empty":
+            return (
+                <div className="p-6 overflow-y-auto">
+                    <div className="space-y-4">
+                        {/* <DraggableCard
+                            className="group"
+                        >
+
+                        </DraggableCard> */}
+                    </div>
+                </div>
+            )
         default:
             return <div className="p-6">Window content</div>
     }
